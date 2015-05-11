@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #endif
 
+#define FALSE 0
+#define TRUE !(FALSE)
 
 /* *********************** Estruturas *************************** */
 
@@ -30,6 +32,14 @@ typedef struct nodo {
 	int qtdNome;
 	int linhaRegistro234;
 } tipo234;
+
+static ApAVL nodoNULL {		// NÃO
+	codigo = 0;				//		SEI
+	bal = 0;				//			SE
+	esq = NULL;				//				PODE
+	dir = NULL;				//					FAZER
+	linhaRegistroAVL = 0;	//							ISSO
+}
  
 
 /* ******************** Funções ************************** */
