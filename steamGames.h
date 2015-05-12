@@ -33,21 +33,16 @@ typedef struct nodo {
 	int linhaRegistro234;
 } tipo234;
 
-static ApAVL nodoNULL {		// NÃO
-	codigo = 0;				//		SEI
-	bal = 0;				//			SE
-	esq = NULL;				//				PODE
-	dir = NULL;				//					FAZER
-	linhaRegistroAVL = 0;	//							ISSO
-}
- 
+ApAVL nodoNULL;	
+
 
 /* ******************** Funções ************************** */
 
 // ------------ AVL ---------------- //
+void initnodoNull ();
 ApAVL	rotDir			(ApAVL);
 ApAVL	rotEsq			(ApAVL);
-ApAVL	balanceiaAVL		(ApAVL);
+ApAVL	balanceiaAVL	(ApAVL);
 ApAVL	criaNodoAVL		(int, int linha);
 ApAVL	insereAVL		(ApAVL, int, int *mudaA, int);
 void	imprimeAVL		(ApAVL);

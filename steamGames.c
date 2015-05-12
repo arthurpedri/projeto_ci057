@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "steamGames.h"
 
+void initnodoNull ()
+{
+	nodoNULL = malloc(sizeof(tipoAVL));
+
+}
+
 ApAVL rotDir (ApAVL p)
 {
 	ApAVL q;
@@ -20,34 +26,34 @@ ApAVL rotEsq (ApAVL p)
 	return q; 
 }
 
-ApAVL balanceiaAVL (ApAVL *a) // Estava como ponteiro no Caderno. Não foi testado se é correto
+ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testado se é correto
 {
 	ApAVL f, neto;
-	if (*a->bal == 2)
+	if (a->bal == 2)
 	{
-		f = *a->esq;
+		f = a->esq;
 		if (f->bal == 1)
 		{
-			*a = rotDir(*a);
-			*a->bal = 0;
+			a = rotDir(a);
+			a->bal = 0;
 			f->bal = 0;
 		}
 		else
 		{
 			neto = f->dir;
 			f = rotEsq(f);
-			*a = rotDir(*a);
+			a = rotDir(a);
 			if (neto->bal == 0)
-				*a->bal = f->bal = 0;
+				a->bal = f->bal = 0;
 			else
 				if (neto->bal > 0)
 				{
-					*a->bal = 1;
+					a->bal = 1;
 					f->bal = 0;
 				}
 				else
 				{
-					*a->bal = 0;
+					a->bal = 0;
 					f->bal = 1;
 				}
 			neto->bal = 0;
@@ -55,32 +61,33 @@ ApAVL balanceiaAVL (ApAVL *a) // Estava como ponteiro no Caderno. Não foi testa
 	}	
 	else
 	{
-		f=*a->dir;
+		f=a->dir;
 		if (f->bal == - 1)
 		{
-			*a = rotEsq(*a);
-			*a->bal = 0;
+			a = rotEsq(a);
+			a->bal = 0;
 			f->bal = 0;
 		}
 		else
 		{
 			neto = f->esq;
 			f = rotDir(f);
-			*a = rotEsq(f);
-			if (netp->bal == 0)
-				*a->bal = f->bal;
+			a = rotEsq(f);
+			if (neto->bal == 0)
+				a->bal = f->bal;
 			else
 			{
 				if (neto->bal > 0)
 				{
-					*a->bal = 0;
+					a->bal = 0;
 					f->bal = -1;
 				}
 				else
 				{
-					*a->bal = ; //Checar no caderno da Anna
-					f->bal = ; //Checar no caderno da Anna
+					a->bal = 1; //Checar no caderno da Anna -- Olhei na página
+					f->bal = 0; //Checar no caderno da Anna -- Olhei na página
 				}
+				neto->bal = 0; // Não tem isso no caderno, mas na página diz que tem.. 
 			}
 		}
 	}
@@ -88,7 +95,7 @@ ApAVL balanceiaAVL (ApAVL *a) // Estava como ponteiro no Caderno. Não foi testa
 
 ApAVL criaNodoAVL (int codigo, int linha)
 {
-	ApAVL aux = malloc (sizeof(no));
+	ApAVL aux = malloc (sizeof(tipoAVL));
 	if(!aux)
 		return NULL;
 	aux->codigo = codigo;
@@ -99,7 +106,7 @@ ApAVL criaNodoAVL (int codigo, int linha)
 	return aux;
 }
 
-ApAVL	insereAVL		(ApAVL p, int codigo, int *mudaA, int linha)
+ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 {
 	if (p == nodoNULL)
 	{
@@ -118,31 +125,37 @@ ApAVL	insereAVL		(ApAVL p, int codigo, int *mudaA, int linha)
 		{
 			p->bal++;
 			if (p->bal == 2)
-				balanceiaAVL (&p);
+				balanceiaAVL (p);
 			if (p->bal == 0)
 				*mudaA = FALSE;
 		}
-		else
+	}	
+	else
+	{
+		p->dir = insereAVL(p->dir, codigo, mudaA, linha);
+		if (*mudaA) 
 		{
-			p->dir = insereAVL(p->dir, codigo, mudaA, linha);
-			if (*mudaA)
-			{
-				p->bal--;
-				if (p->bal == -2)
-					balanceiaAVL(&p);
-				if (p->bal == 0)
-					*mudaA = TRUE;
-			}
+			p->bal--;
+			if (p->bal == -2)
+				balanceiaAVL(p);
+			if (p->bal == 0)
+				*mudaA = TRUE;
 		}
 	}
 	return p;
 }
 void imprimeAVL (ApAVL p)
 {
-	printf ("%d", p->codigo);
+	if (p==nodoNULL)
+		return;
+	printf (" (%d", p->codigo);
+	imprimeAVL(p->esq);
+	imprimeAVL(p->dir);
+	printf (")");
+	
 }
 
-ApAVL buscaAVL (ApAVL p, int codigo) // Falta inserir o imprimeAVL da maneira que está na descrição
+ApAVL buscaAVL (ApAVL p, int codigo)
 {
 	if (p==nodoNULL)
 		return nodoNULL;
