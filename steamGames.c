@@ -29,6 +29,7 @@ ApAVL rotEsq (ApAVL p)
 ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testado se é correto
 {
 	ApAVL f, neto;
+	printf ("IM in");
 	if (a->bal == 2)
 	{
 		f = a->esq;
@@ -91,6 +92,8 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 			}
 		}
 	}
+	imprimeAVL(a);
+	return a;
 }
 
 ApAVL criaNodoAVL (int codigo, int linha)
@@ -125,7 +128,7 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 		{
 			p->bal++;
 			if (p->bal == 2)
-				balanceiaAVL (p);
+				p = balanceiaAVL (p);
 			if (p->bal == 0)
 				*mudaA = FALSE;
 		}
@@ -137,16 +140,18 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 		{
 			p->bal--;
 			if (p->bal == -2)
-				balanceiaAVL(p);
+				p = balanceiaAVL(p);
 			if (p->bal == 0)
 				*mudaA = TRUE;
 		}
 	}
+	imprimeAVL(p);
+	printf("\n");
 	return p;
 }
 void imprimeAVL (ApAVL p)
 {
-	if (p==nodoNULL)
+	if (p==nodoNULL)	
 		return;
 	printf (" (%d", p->codigo);
 	imprimeAVL(p->esq);

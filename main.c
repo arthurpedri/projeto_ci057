@@ -8,14 +8,17 @@ int main (int argc, char *argv[])
 	int mudaA;
 	int i;
 	initnodoNull();
-	printf ("%d", nodoNULL->codigo);
 	ApAVL p = nodoNULL;
 	for (i = 0; i < 5;i += 1)
 	{
 		scanf("%d", &a);
 		p = insereAVL(p ,a ,&mudaA, a+1 );
+		printf ("FInal do laço\n");
+		imprimeAVL(p);
+		printf("\n");
 	}
 
 	imprimeAVL(p);
+	printf ("\n");
 	return 0;
-}
+} 
