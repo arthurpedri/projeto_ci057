@@ -29,7 +29,7 @@ ApAVL rotEsq (ApAVL p)
 ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testado se é correto
 {
 	ApAVL f, neto;
-	printf ("IM in");
+	printf("%d, balanceia\n",a->codigo);
 	if (a->bal == 2)
 	{
 		f = a->esq;
@@ -66,8 +66,10 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 		if (f->bal == - 1)
 		{
 			a = rotEsq(a);
+			printf("a->%d  f->%d\n", a->codigo, f->codigo);
 			a->bal = 0;
 			f->bal = 0;
+			//a->esq->bal = 0;
 		}
 		else
 		{
@@ -92,7 +94,9 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 			}
 		}
 	}
+	printf("Final do Balanceia\n");
 	imprimeAVL(a);
+	printf ("\n");
 	return a;
 }
 
@@ -133,7 +137,7 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 				*mudaA = FALSE;
 		}
 	}	
-	else
+ 		else
 	{
 		p->dir = insereAVL(p->dir, codigo, mudaA, linha);
 		if (*mudaA) 
@@ -145,15 +149,13 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 				*mudaA = TRUE;
 		}
 	}
-	imprimeAVL(p);
-	printf("\n");
 	return p;
 }
 void imprimeAVL (ApAVL p)
 {
 	if (p==nodoNULL)	
 		return;
-	printf (" (%d", p->codigo);
+	printf (" (%d %d", p->codigo, p->bal);
 	imprimeAVL(p->esq);
 	imprimeAVL(p->dir);
 	printf (")");
@@ -170,4 +172,4 @@ ApAVL buscaAVL (ApAVL p, int codigo)
 		return buscaAVL(p->esq, codigo);
 	else
 		return buscaAVL(p->dir, codigo);
-}
+} 	
