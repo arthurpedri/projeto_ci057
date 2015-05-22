@@ -37,7 +37,8 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 		{
 			a = rotDir(a);
 			a->bal = 0;
-			f->bal = 0;
+			a->dir->bal = 0;
+			//f->bal = 0;
 		}
 		else
 		{
@@ -60,22 +61,61 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 			neto->bal = 0;
 		}
 	}	
-	else
+	else 
 	{
 		f=a->dir;
-		if (f->bal == - 1)
+		if (f->bal == 0)
+		{
+			a = rotDir(a);
+			a->bal = 1;
+			f->bal = -1;
+		}
+		else
+		{
+			if (f->bal == -1)
+			{
+				a = rotEsq(a);
+				a->esq->bal = 0;
+				a->bal = 0;
+			}
+			else
+			{
+				neto = f->esq;
+				f = rotDir(f);
+				a = rotDir(a);
+				if (neto->bal == 0)
+					a->bal = f->bal = 0;
+				else
+				{
+					if (neto->bal > 0)
+					{
+						a->bal = 0;
+						f->bal = - 1;
+					}
+					else
+					{
+						a->bal = 1;
+						f->bal = 0;
+					}
+				}	
+				neto->bal = 0;
+			}
+		}
+		/*if (f->bal == - 1)
 		{
 			a = rotEsq(a);
-			printf("a->%d  f->%d\n", a->codigo, f->codigo);
+			//printf("a->%d  f->%d\n", a->codigo, f->codigo);
 			a->bal = 0;
-			f->bal = 0;
-			//a->esq->bal = 0;
+			//f->bal = 0;
+			a->esq->bal = 0;
 		}
 		else
 		{
 			neto = f->esq;
 			f = rotDir(f);
-			a = rotEsq(f);
+			printf("f =%d\n", f->codigo);
+			a = rotEsq(a);
+			printf("a =%d\n", a->codigo);
 			if (neto->bal == 0)
 				a->bal = f->bal;
 			else
@@ -92,7 +132,7 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 				}
 				neto->bal = 0; // Não tem isso no caderno, mas na página diz que tem.. 
 			}
-		}
+		}*/
 	}
 	printf("Final do Balanceia\n");
 	imprimeAVL(a);
