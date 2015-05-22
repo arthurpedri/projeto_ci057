@@ -30,7 +30,7 @@ typedef struct nodo {
 	char nome[3][15];
 	Ap234 Ap[4];
 	int qtdNome;
-	int linhaRegistro234;
+	int linhaRegistro234[3];
 } tipo234;
 
 ApAVL nodoNULL;	
