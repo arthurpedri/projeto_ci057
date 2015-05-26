@@ -299,10 +299,18 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 		i--; // Ele vai sair sempre uma posição na frente
 		
 		
-		for (j = pai->qtdNome - 1; j > i; j -= 1)
+		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
 		{
-			//Deslocar os nomes para direita
+			strcpy(pai->nome[j+1], pai->nome[j]);
 		}
+		
+		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar registros
+		{
+			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j]);
+		} 	
+		
+		
+		
     }
 
 }
