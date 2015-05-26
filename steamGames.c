@@ -283,12 +283,26 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
     Ap234 p2 = criaNodo234(pai->nome[2], pai->linhaRegistro234[2]);
     p2->Ap[0] = pai->Ap[2];
     p2->Ap[1] = pai->Ap[3];
-    if (filho == nodoNULL234)
+    if (filho == nodoNULL234) // Se for Raiz
     {
     	Ap234 raiz = criaNodo234(pai->nome[1], pai->linhaRegistro234[1]);
     	raiz->Ap[0] = p1;
     	raiz->Ap[1] = p2;
     	pai = raiz;
+    }
+    else
+    {
+    	int i = 0;
+    	int j = 0;
+		while( (strcmp(filho->nome[1], pai->nome[i]) < 0) && (i < pai->qtdNome)) // Procurando a posição no pai
+			i++;
+		i--; // Ele vai sair sempre uma posição na frente
+		
+		
+		for (j = pai->qtdNome - 1; j > i; j -= 1)
+		{
+			//Deslocar os nomes para direita
+		}
     }
 
 }
