@@ -14,11 +14,10 @@ void initnodoNull ()
 
 void initnodoNull234 ()
 {
+	int i;
 	nodoNULL234 = malloc(sizeof(tipo234));
-	for (int i = 0; i < 4; ++i)
-		nodoNULL->Ap[i] = nodoNULL;
-	nodoNULL234->nome = calloc(45, sizeof(char));
-	nodoNULL234->linhaRegistro234 = calloc(3, sizeof(int));
+	for (i = 0; i < 4; ++i)
+		nodoNULL234->Ap[i] = nodoNULL234;
 	nodoNULL234->qtdNome = 0;
 }
 
@@ -43,36 +42,54 @@ ApAVL rotEsq (ApAVL p)
 ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testado se é correto
 {
 	ApAVL f, neto;
-	printf("%d, balanceia\n",a->codigo);
+	printf("a = %d %d, balanceia\n",a->codigo,a->bal);
+	imprimeAVL (a);
+	printf("\n");
 	if (a->bal == 2)
 	{
 		f = a->esq;
-		if (f->bal == 1)
+		if (f->bal == 0)
 		{
+			printf("bal = 0\n");
+			a->bal = -1;
+			f->bal = 1;
 			a = rotDir(a);
-			a->bal = 0;
-			a->dir->bal = 0;
-			//f->bal = 0;
+			printf ("a dentro do if: \n");
+			imprimeAVL(a);
 		}
 		else
 		{
-			neto = f->dir;
-			f = rotEsq(f);
-			a = rotDir(a);
-			if (neto->bal == 0)
-				a->bal = f->bal = 0;
+			if (f->bal == 1)
+			{
+				a->bal = 0;
+				f->bal = 0;
+				a = rotDir(a);
+			}
 			else
-				if (neto->bal > 0)
-				{
-					a->bal = 1;
-					f->bal = 0;
-				}
-				else
+			{
+				neto = f->dir;
+				if (neto->bal == 0)
 				{
 					a->bal = 0;
-					f->bal = 1;
+					f->bal = 0;
+				} 
+				else
+				{
+					if (neto->bal > 0)
+					{
+						a->bal = -1;
+						f->bal = 0;
+					}
+					else
+					{
+						a->bal = 0;
+						f->bal = 1;
+					}
+					neto->bal = 0;	
 				}
-			neto->bal = 0;
+				f = rotEsq(f);
+				a = rotDir(a);
+			}
 		}
 	}	
 	else 
@@ -80,25 +97,29 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 		f=a->dir;
 		if (f->bal == 0)
 		{
-			a = rotDir(a);
+			printf("bal = 0\n");
 			a->bal = 1;
 			f->bal = -1;
+			a = rotEsq(a);
+			printf ("a dentro do if: \n");
+			imprimeAVL(a);
 		}
 		else
 		{
 			if (f->bal == -1)
 			{
-				a = rotEsq(a);
-				a->esq->bal = 0;
+				f->bal = 0;
 				a->bal = 0;
+				a = rotEsq(a);
 			}
 			else
 			{
 				neto = f->esq;
-				f = rotDir(f);
-				a = rotDir(a);
 				if (neto->bal == 0)
-					a->bal = f->bal = 0;
+				{
+					a->bal = 0;
+					f->bal = 0;
+				}
 				else
 				{
 					if (neto->bal > 0)
@@ -111,42 +132,12 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 						a->bal = 1;
 						f->bal = 0;
 					}
+					neto->bal = 0;
 				}	
-				neto->bal = 0;
+				f = rotDir(f);
+				a = rotEsq(a);
 			}
 		}
-		/*if (f->bal == - 1)
-		{
-			a = rotEsq(a);
-			//printf("a->%d  f->%d\n", a->codigo, f->codigo);
-			a->bal = 0;
-			//f->bal = 0;
-			a->esq->bal = 0;
-		}
-		else
-		{
-			neto = f->esq;
-			f = rotDir(f);
-			printf("f =%d\n", f->codigo);
-			a = rotEsq(a);
-			printf("a =%d\n", a->codigo);
-			if (neto->bal == 0)
-				a->bal = f->bal;
-			else
-			{
-				if (neto->bal > 0)
-				{
-					a->bal = 0;
-					f->bal = -1;
-				}
-				else
-				{
-					a->bal = 1; //Checar no caderno da Anna -- Olhei na página
-					f->bal = 0; //Checar no caderno da Anna -- Olhei na página
-				}
-				neto->bal = 0; // Não tem isso no caderno, mas na página diz que tem.. 
-			}
-		}*/
 	}
 	printf("Final do Balanceia\n");
 	imprimeAVL(a);
@@ -231,24 +222,26 @@ ApAVL buscaAVL (ApAVL p, int codigo)
 // ------------ 2-3-4 ---------------- //
 
 void busca234 (Ap234 ap, char *nome) {
-	Ap234 q = ap;                 
-	if (q!=nodoNULL) {
-		for (i=0; i<qtdNome; i++){
-			if (strcmp(q.nome[i], nome) == 0)
+	Ap234 q = ap;
+	int i;                 
+	if (q != nodoNULL) {
+		for (i=0; i< q->qtdNome; i++){
+			if (strcmp(q->nome[i], nome) == 0)
 				return q;
-			else if (strcmp (q.nome[i], nome) < 0)
-				return busca234 (q.Ap[i],nome);
+			else if (strcmp (q->nome[i], nome) < 0)
+				return busca234 (q->Ap[i],nome);
 		}
-		return busca234 (q.Ap[qtdNome], nome);
+		return busca234 (q->Ap[q->qtdNome], nome);
 	}
 }
 
 Ap234 criaNodo234 (char *nome, int reg) {
 	Ap234 novo = malloc (sizeof(tipo234));
+	int i;
 	if (!novo) return NULL;
-	novo->nome[0] = nome;
-	for (int i = 0; i < 4; ++i)
-		novo->Ap[i] = nodoNULL;
+	strcpy (novo->nome[0], nome);
+	for (i = 0; i < 4; ++i)
+		novo->Ap[i] = nodoNULL234;
 	novo->qtdNome = 0;
 	novo->linhaRegistro234[0] = reg;
 	return novo;
@@ -266,7 +259,7 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 	}
 
 	int i = 0;
-	while ((strcmp(nome, ap->nome[i]) > 0) && (i < qtdNome))
+	while ((strcmp(nome, ap->nome[i]) > 0) && (i < ap->qtdNome))
 		i++;
 
 	if (ap->Ap[i]->qtdNome == 3)
@@ -306,7 +299,7 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 		
 		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar registros
 		{
-			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j]);
+			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j];
 		} 	
 		
 		
