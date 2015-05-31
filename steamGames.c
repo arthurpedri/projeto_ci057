@@ -209,6 +209,29 @@ ApAVL buscaAVL (ApAVL p, int codigo)
 
 // ------------ 2-3-4 ---------------- //
 
+void	imprime234		(Ap234 p)
+{
+	int i;
+	if (p==nodoNULL234)	
+		return;
+	
+	printf("(%s", p->nome[0]);
+	for (i = 1; i < p->qtdNome; i += 1)
+	{
+		printf(";%s", p->nome[i]);
+	}
+
+	for (i = 0; i <= p->qtdNome; i += 1)
+	{
+		imprime234(p->Ap[i]);
+	}
+		
+	printf (")");
+
+}
+
+
+
 void busca234 (Ap234 ap, char *nome) {
 	Ap234 q = ap;
 	int i;                 
@@ -230,7 +253,7 @@ Ap234 criaNodo234 (char *nome, int reg) {
 	strcpy (novo->nome[0], nome);
 	for (i = 0; i < 4; ++i)
 		novo->Ap[i] = nodoNULL234;
-	novo->qtdNome = 0;
+	novo->qtdNome = 1;
 	novo->linhaRegistro234[0] = reg;
 	return novo;
 }
@@ -239,22 +262,71 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 	if (ap == nodoNULL234){
 		return criaNodo234(nome,reg);
 	}
-	// compara os nomes
-	if (ap->qtdNome == 3)
-	{
-		//caso do pai ser raiz sozinha
-		ap = split234(ap, nodoNULL234);
-	}
-
 	int i = 0;
-	while ((strcmp(nome, ap->nome[i]) > 0) && (i < ap->qtdNome))
-		i++;
-
-	if (ap->Ap[i]->qtdNome == 3)
+	int flag = TRUE;
+	
+	for (i = 0; i <= ap->qtdNome; i += 1) // Tem que saber se é folha.
 	{
-		ap = split234(ap, ap->Ap[i]);
+		if (ap->Ap[i] != nodoNULL234)
+			flag = FALSE;
 	}
-	return insere234(ap->Ap[i], nome, reg);
+	
+	if(!flag)
+	{
+		if (ap->qtdNome == 3)
+		{
+			//caso do pai ser raiz sozinha
+			ap = split234(ap, nodoNULL234);
+		}
+		i = 0;
+		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+			i++;
+
+		if (ap->Ap[i]->qtdNome == 3)
+		{
+			ap = split234(ap, ap->Ap[i]);
+		}
+		i = 0;
+		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+			i++;
+
+		ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
+	}
+	else
+	{
+		if (ap->qtdNome == 3)
+		{
+			//caso do pai ser raiz sozinha
+			ap = split234(ap, nodoNULL234);
+			i = 0;
+			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+				i++;
+
+			if (ap->Ap[i]->qtdNome == 3)
+			{
+				ap = split234(ap, ap->Ap[i]);
+			}
+			i = 0;
+			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+				i++;
+
+			ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
+		}
+		else
+		{
+			int j;
+			i = 0;
+			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+				i++;
+			for (j = ap->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
+			{
+				strcpy(ap->nome[j+1], ap->nome[j]);
+			}
+			strcpy(ap->nome[i], nome);
+			ap->qtdNome++;
+		}
+	}	
+	return ap;
 }
 
 Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
@@ -275,9 +347,8 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
     {
     	int i = 0;
     	int j = 0;
-		while( (strcmp(filho->nome[1], pai->nome[i]) < 0) && (i < pai->qtdNome)) // Procurando a posição no pai
+		while( (strcmp(filho->nome[1], pai->nome[i]) >= 0) && (i < pai->qtdNome)) // Procurando a posição no pai
 			i++;
-		i--; // Ele vai sair sempre uma posição na frente
 		
 		
 		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
@@ -300,5 +371,6 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 		pai->Ap[i+1] = p2; 	
 		
     }
+    return pai;
 
 }
