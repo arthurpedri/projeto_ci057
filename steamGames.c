@@ -42,20 +42,14 @@ ApAVL rotEsq (ApAVL p)
 ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testado se é correto
 {
 	ApAVL f, neto;
-	printf("a = %d %d, balanceia\n",a->codigo,a->bal);
-	imprimeAVL (a);
-	printf("\n");
 	if (a->bal == 2)
 	{
 		f = a->esq;
 		if (f->bal == 0)
 		{
-			printf("bal = 0\n");
 			a->bal = -1;
 			f->bal = 1;
 			a = rotDir(a);
-			printf ("a dentro do if: \n");
-			imprimeAVL(a);
 		}
 		else
 		{
@@ -97,12 +91,9 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 		f=a->dir;
 		if (f->bal == 0)
 		{
-			printf("bal = 0\n");
 			a->bal = 1;
 			f->bal = -1;
 			a = rotEsq(a);
-			printf ("a dentro do if: \n");
-			imprimeAVL(a);
 		}
 		else
 		{
@@ -139,9 +130,6 @@ ApAVL balanceiaAVL (ApAVL a) // Estava como ponteiro no Caderno. Não foi testad
 			}
 		}
 	}
-	printf("Final do Balanceia\n");
-	imprimeAVL(a);
-	printf ("\n");
 	return a;
 }
 
@@ -191,7 +179,7 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 			if (p->bal == -2)
 				p = balanceiaAVL(p);
 			if (p->bal == 0)
-				*mudaA = TRUE;
+				*mudaA = FALSE;
 		}
 	}
 	return p;
@@ -297,10 +285,19 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 			strcpy(pai->nome[j+1], pai->nome[j]);
 		}
 		
+		strcpy(pai->nome[i], filho->nome[1]);
+		
 		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar registros
 		{
 			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j];
-		} 	
+		}
+		
+		pai->linhaRegistro234[i] = filho->linhaRegistro234[1];
+		
+		pai->qtdNome++;
+		
+		pai->Ap[i] = p1;
+		pai->Ap[i+1] = p2; 	
 		
 		
 		
