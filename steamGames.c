@@ -299,8 +299,6 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 		pai->Ap[i] = p1;
 		pai->Ap[i+1] = p2; 	
 		
-		
-		
     }
 
 }
