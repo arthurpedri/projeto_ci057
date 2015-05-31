@@ -271,7 +271,7 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 			flag = FALSE;
 	}
 	
-	if(!flag)
+	if(!flag) //Não é folha
 	{
 		if (ap->qtdNome == 3)
 		{
@@ -279,44 +279,38 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 			ap = split234(ap, nodoNULL234);
 		}
 		i = 0;
-		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))// procura onde deve ser inserido
 			i++;
 
-		if (ap->Ap[i]->qtdNome == 3)
+		if (ap->Ap[i]->qtdNome == 3) // ve se onde vai ser inserido precisa ser quebrado
 		{
 			ap = split234(ap, ap->Ap[i]);
 		}
-		i = 0;
-		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+		
+		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))//após a quebra, ou não procura onde deve ser inserido
 			i++;
 
 		ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
 	}
-	else
+	else // É folha
 	{
-		if (ap->qtdNome == 3)
+		if (ap->qtdNome == 3) // Teste para ver se a folha precisa ser quebrada
 		{
-			//caso do pai ser raiz sozinha
+		
 			ap = split234(ap, nodoNULL234);
 			i = 0;
-			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
-				i++;
+			// Faz algo parecido com aperna passada
 
-			if (ap->Ap[i]->qtdNome == 3)
-			{
-				ap = split234(ap, ap->Ap[i]);
-			}
-			i = 0;
 			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
 				i++;
 
 			ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
 		}
-		else
+		else// folha perfeita para ser inserida, Obs todos os casos deveriam passar por aqui
 		{
 			int j;
 			i = 0;
-			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome)) // Onde vai inserir
 				i++;
 			for (j = ap->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
 			{
@@ -356,14 +350,14 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 			strcpy(pai->nome[j+1], pai->nome[j]);
 		}
 		
-		strcpy(pai->nome[i], filho->nome[1]);
+		strcpy(pai->nome[i], filho->nome[1]); // insere nome
 		
 		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar registros
 		{
 			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j];
 		}
 		
-		pai->linhaRegistro234[i] = filho->linhaRegistro234[1];
+		pai->linhaRegistro234[i] = filho->linhaRegistro234[1]; // insere reg
 		
 		pai->qtdNome++;
 		
