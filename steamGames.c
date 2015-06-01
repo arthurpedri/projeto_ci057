@@ -263,51 +263,42 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 		return criaNodo234(nome,reg);
 	}
 	int i = 0;
-	int flag = TRUE;
-	
-	for (i = 0; i <= ap->qtdNome; i += 1) // Tem que saber se é folha.
+	if (ap->qtdNome == 3) // É raiz
 	{
-		if (ap->Ap[i] != nodoNULL234)
-			flag = FALSE;
-	}
-	
-	if(!flag) //Não é folha
-	{
-		if (ap->qtdNome == 3)
-		{
-			//caso do pai ser raiz sozinha
-			ap = split234(ap, nodoNULL234);
-		}
+		ap = split234(nodoNULL234, ap);
 		i = 0;
-		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))// procura onde deve ser inserido
-			i++;
 
-		if (ap->Ap[i]->qtdNome == 3) // ve se onde vai ser inserido precisa ser quebrado
-		{
-			ap = split234(ap, ap->Ap[i]);
-		}
-		
-		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))//após a quebra, ou não procura onde deve ser inserido
+		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
 			i++;
 
 		ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
 	}
-	else // É folha
+	else
 	{
-		if (ap->qtdNome == 3) // Teste para ver se a folha precisa ser quebrada
-		{
-		
-			ap = split234(ap, nodoNULL234);
-			i = 0;
-			// Faz algo parecido com aperna passada
-
-			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
-				i++;
-
-			ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
-		}
-		else// folha perfeita para ser inserida, Obs todos os casos deveriam passar por aqui
-		{
+    	int flag = TRUE;
+    	for (i = 0; i <= ap->qtdNome; i += 1) // Tem que saber se é folha.
+    	{
+    		if (ap->Ap[i] != nodoNULL234)
+    			flag = FALSE;
+    	}
+    	
+    	if(!flag) //Não é folha
+    	{
+    		i = 0;
+    		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))// procura onde deve ser inserido
+    			i++;
+    
+    		if (ap->Ap[i]->qtdNome == 3) // ve se onde vai ser inserido precisa ser quebrado
+    		{
+    			ap = split234(ap, ap->Ap[i]);
+        		while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome))
+        			i++;
+    		}
+    		
+    		ap->Ap[i] = insere234(ap->Ap[i], nome, reg);
+    	}
+    	else // É folha
+    	{
 			int j;
 			i = 0;
 			while ((strcmp(nome, ap->nome[i]) >= 0) && (i < ap->qtdNome)) // Onde vai inserir
@@ -315,24 +306,26 @@ Ap234 insere234	(Ap234 ap, char *nome, int reg){
 			for (j = ap->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
 			{
 				strcpy(ap->nome[j+1], ap->nome[j]);
+				ap->linhaRegistro234[j+1] = ap->linhaRegistro234[j];
 			}
 			strcpy(ap->nome[i], nome);
+			ap->linhaRegistro234[i] = reg;
 			ap->qtdNome++;
-		}
-	}	
+    	}	
+    }	
 	return ap;
 }
 
 Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
-	Ap234 p1 = criaNodo234(pai->nome[0], pai->linhaRegistro234[0]);  
-	p1->Ap[0] = pai->Ap[0];
-    p1->Ap[1] = pai->Ap[1];
-    Ap234 p2 = criaNodo234(pai->nome[2], pai->linhaRegistro234[2]);
-    p2->Ap[0] = pai->Ap[2];
-    p2->Ap[1] = pai->Ap[3];
-    if (filho == nodoNULL234) // Se for Raiz
+	Ap234 p1 = criaNodo234(filho->nome[0], filho->linhaRegistro234[0]);  
+	p1->Ap[0] = filho->Ap[0];
+    p1->Ap[1] = filho->Ap[1];
+    Ap234 p2 = criaNodo234(filho->nome[2], filho->linhaRegistro234[2]);
+    p2->Ap[0] = filho->Ap[2];
+    p2->Ap[1] = filho->Ap[3];
+    if (pai == nodoNULL234) // Se for Raiz
     {
-    	Ap234 raiz = criaNodo234(pai->nome[1], pai->linhaRegistro234[1]);
+    	Ap234 raiz = criaNodo234(filho->nome[1], filho->linhaRegistro234[1]);
     	raiz->Ap[0] = p1;
     	raiz->Ap[1] = p2;
     	pai = raiz;
@@ -345,26 +338,21 @@ Ap234 split234 (Ap234 pai, Ap234 filho){  //errado com certyze
 			i++;
 		
 		
-		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes
+		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar nomes e registros
 		{
 			strcpy(pai->nome[j+1], pai->nome[j]);
-		}
-		
-		strcpy(pai->nome[i], filho->nome[1]); // insere nome
-		
-		for (j = pai->qtdNome - 1; j + 1 > i; j -= 1) // Deslocar registros
-		{
 			pai->linhaRegistro234[j+1]= pai->linhaRegistro234[j];
 		}
 		
+		strcpy(pai->nome[i], filho->nome[1]); // insere nome
 		pai->linhaRegistro234[i] = filho->linhaRegistro234[1]; // insere reg
-		
 		pai->qtdNome++;
 		
 		pai->Ap[i] = p1;
 		pai->Ap[i+1] = p2; 	
 		
     }
+    free (filho);
     return pai;
 
 }
