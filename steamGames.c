@@ -150,36 +150,36 @@ ApAVL insereAVL (ApAVL p, int codigo, int *mudaA, int linha)
 {
 	if (p == nodoNULL)
 	{
-		*mudaA = TRUE;
+		mudaA = TRUE;
 		return criaNodoAVL(codigo, linha);
 	}
 	if (codigo == p->codigo)
 	{
-		*mudaA = FALSE;
+		mudaA = FALSE;
 		return p;
 	}	
 	if (codigo < p->codigo)
 	{
 		p->esq = insereAVL(p->esq, codigo, mudaA, linha);
-		if (*mudaA)
+		if (mudaA)
 		{
 			p->bal++;
 			if (p->bal == 2)
 				p = balanceiaAVL (p);
 			if (p->bal == 0)
-				*mudaA = FALSE;
+				mudaA = FALSE;
 		}
 	}	
  		else
 	{
 		p->dir = insereAVL(p->dir, codigo, mudaA, linha);
-		if (*mudaA) 
+		if (mudaA) 
 		{
 			p->bal--;
 			if (p->bal == -2)
 				p = balanceiaAVL(p);
 			if (p->bal == 0)
-				*mudaA = FALSE;
+				mudaA = FALSE;
 		}
 	}
 	return p;
@@ -188,7 +188,7 @@ void imprimeAVL (ApAVL p)
 {
 	if (p==nodoNULL)	
 		return;
-	printf (" (%d %d", p->codigo, p->bal);
+	printf (" (%d", p->codigo);
 	imprimeAVL(p->esq);
 	imprimeAVL(p->dir);
 	printf (")");
@@ -215,7 +215,7 @@ void	imprime234		(Ap234 p)
 	if (p==nodoNULL234)	
 		return;
 	
-	printf("(%s", p->nome[0]);
+	printf(" (%s", p->nome[0]);
 	for (i = 1; i < p->qtdNome; i += 1)
 	{
 		printf(";%s", p->nome[i]);
@@ -235,15 +235,22 @@ void	imprime234		(Ap234 p)
 void busca234 (Ap234 ap, char *nome) {
 	Ap234 q = ap;
 	int i;                 
-	if (q != nodoNULL) {
+	if (q != nodoNULL234) {
 		for (i=0; i< q->qtdNome; i++){
-			if (strcmp(q->nome[i], nome) == 0)
-				return q;
-			else if (strcmp (q->nome[i], nome) < 0)
-				return busca234 (q->Ap[i],nome);
+			if (strcmp(q->nome[i], nome) == 0){
+				linhaVetor234 = q->linhaRegistro234[i];
+				return;
+			}
+			else if (strcmp (q->nome[i], nome) < 0){
+				busca234(q->Ap[i], nome);
+				return;
+			}
 		}
-		return busca234 (q->Ap[q->qtdNome], nome);
+		busca234(q->Ap[q->qtdNome], nome);
+		return;
 	}
+	linhaVetor234 = 0;
+	return;
 }
 
 Ap234 criaNodo234 (char *nome, int reg) {

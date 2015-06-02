@@ -35,7 +35,7 @@ typedef struct nodo {
 } tipo234;
 
 Ap234 nodoNULL234;
-
+int linhaVetor234;
 
 /* ******************** Funções ************************** */
 
